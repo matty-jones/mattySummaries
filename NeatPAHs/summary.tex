@@ -1,0 +1,103 @@
+\documentclass[12pt]{article}
+%--------------------   start of the 'preamble'
+%
+\usepackage{graphicx,amssymb,amstext,amsmath,color}
+\usepackage[margin=2cm]{geometry}
+\usepackage{abstract}
+\usepackage{setspace}
+\usepackage[footnotesize,bf]{caption}
+
+% TABLE
+\usepackage{multicol,hhline,colortbl,multirow}
+\usepackage{braket}
+\usepackage{siunitx}
+\usepackage{hyperref}
+\usepackage{authblk}
+\usepackage{siunitx}
+\usepackage{mathrsfs}
+%%\usepackage[sort&compress]{natbib}
+%%\bibpunct{(}{)}{,}{a}{, }{;}
+%
+\usepackage[sort&compress]{natbib}
+\bibpunct{[}{]}{,}{s}{}{;}
+
+
+\definecolor{gray}{gray}{0.8}
+\def\mobunits{\square\centi\meter\per\volt\per\second}
+\def\gcm{\gram\per\cubic\centi\meter}
+\def\ccg{\cellcolor{gray}}
+
+\renewcommand{\labelitemii}{$\circ$}
+\renewcommand{\bibname}{References}
+
+
+\title{MorphCT Results - PAHs}
+\author{Matthew Jones}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Mobility Results}
+
+\textcolor{red}{Simulator note: The mobility simulations here haven't been done at particularly good timescales - a larger quantity of shorter timescales is required in order to get more acceptable trends.
+These simulations are now running on Kestrel, and when they're done I'll update the data below to reflect the new results.}
+
+
+\begin{center}
+\begin{tabular}{| c | c | c | c | c | c |}
+\hline
+\rule{0pt}{2.5ex} 
+\multirow{2}{*}{\textbf{ID}}&\multirow{2}{*}{\textbf{Simulation Name}}&\textbf{Density}&\textbf{Anisotropy}&\textbf{Anisotropy}&\textbf{Mobility}\\
+                            &&(\SI{}{\gcm})&(Arb. U.)&(Shape)&(\SI{}{\mobunits})\\
+\hhline{|======|}
+\textbf{\ccg1}&\rule{0pt}{2.5ex}\ccg PE\_MultiStack\_Eclipsed&\ccg ----&\ccg 0.9461&\ccg Thin Tube&\ccg5.75$\times 10^{0}$\\
+\textbf{2}&\rule{0pt}{2.5ex}PE\_SingleStack\_Eclipsed&----&0.2191&Fat Tube&4.46$\times 10^{-2}$\\
+\textbf{\ccg3}&\rule{0pt}{2.5ex}\ccg PE\_SingleStack\_Ordered&\ccg ----&\ccg 0.0844&\ccg Oblate Spheroid&\ccg5.09$\times 10^{-2}$\\
+\hhline{|======|}
+\textbf{4}&\rule{0pt}{2.5ex}PT\_MultiStack\_Eclipsed&----&0.1306&Oblate Spheroid&2.47$\times 10^{-1}$\\
+\textbf{\ccg5}&\rule{0pt}{2.5ex}\ccg PT\_MultiStack\_Ordered&\ccg ----&\ccg 0.2349&\ccg Oblate Spheroid&\ccg1.01$\times 10^{-3}$\\
+\textbf{6}&\rule{0pt}{2.5ex}PT\_SingleStack\_Eclipsed&----&0.7233&Thin Tube&1.06$\times 10^{0}$\\
+\textbf{\ccg7}&\rule{0pt}{2.5ex}\ccg PT\_SingleStack\_Ordered&\ccg ----&\ccg 0.2743&\ccg Oblate Spheroid&\ccg2.02$\times 10^{-1}$\\
+\hhline{------}
+\end{tabular}\label{table:mob}
+\captionof{table}{The published results from MorphCT for the various PAH morphologies.}
+\end{center}
+
+Representative Values From Literature:
+\begin{itemize}
+    \item{}
+\end{itemize}
+
+Comments:
+\begin{itemize}
+    \item{}
+\end{itemize}
+
+\subsection{3D Carrier Network}
+
+
+\subsection{MSDs}
+
+
+\subsection{Hopping Rate Distributions}
+
+
+\subsection{Scattering Data}
+ 
+\clearpage
+
+
+\section{Outstanding Questions}
+
+
+\begin{itemize}
+    \item{}
+\end{itemize}
+
+
+\bibliography{refs}
+\bibliographystyle{unsrt}
+
+
+\end{document}
