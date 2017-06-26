@@ -180,6 +180,34 @@ $1 \times 10^{-2}$&0.35 $\pm$ 0.03&18 $\pm$ 1&0.55 $\pm$ 0.03&26 $\pm$ 1&58.2\\
     \item{In order to obtain the `correct' [CITATION NEEDED] path lengths for excitons in the sorts of systems that we are investigating, we should modify the F\"orster transport rate by a prefactor of $1 \times 10^{-4}$ to ensure consistent exciton dynamics.}
 \end{itemize}
 
+\clearpage
+
+\section{Carrier Hopping $\Delta E$}
+
+The $\Delta E$ in the Marcus hopping equation is quite different for device-scale simulations.
+
+The following components are required:
+
+\begin{itemize}
+\item{The chromophore energy difference that was used previously ($\Delta E_{ij}$ - note that this is 0 for small molcules, so it might be important to add some energetic disorder to this if we deem it necessary)}
+\item{The drift component.
+        Now that we're simulating a full device, there is a potential within the system that biases hops along the $z$-axis due to the potential applied across the electrical contacts.
+        As the field increases, electrons are forced through the anode, which reduces the number of extractions and therefore the ouput current of the device.
+    Holes are forced in the opposite direction.}
+\item{Finally, since we are now simulating more than one charge carrier, the Coulombic effects of nearby carriers must be taken into account.
+    The Durham code also includes image charges, and I've put in the infrastructure for this, but I don't really understand their prescence properly, so I'm trying without them for now to see what we get.
+    I'll dig into Ben and Chris' old papers to learn more about these images.}
+\end{itemize}
+
+These components will probably need a lot more testing, but preliminary data shows the following magnitudes for these components:
+
+\begin{itemize}
+    \item{The $\Delta E_{ij}$ component has a magnitude of several hundred meV, unless we're dealing with hopping between small molecules (i.e. identical chromophores) in which case $\Delta E_{ij} = 0$.}
+    \item{The drift component is pretty small. In the case of an applied voltage of 0.2 (corresponding to a field of around 1E7 Vm$^{-1}$), the component contribues $\sim 1$ meV to the $\Delta E$.
+        This could be on the small side, or it could be exactly right - I just don't know.
+        One thing I can do is take a look at the Durham data (on my laptop) to see if we ever output those magnitudes anywhere that might be able to give me some idea of if this is correct or not.}
+    \item{The Coulombic effects have a magnitude of several hundred meV (for immediately dissociated carriers), and it feels sensible that the Coulomb potential is of similar order to the energetic disorder arising from chromophore fluctuations.}
+\end{itemize}
 
 \bibliography{refs}
 \bibliographystyle{unsrt}
