@@ -203,11 +203,43 @@ These components will probably need a lot more testing, but preliminary data sho
 
 \begin{itemize}
     \item{The $\Delta E_{ij}$ component has a magnitude of several hundred meV, unless we're dealing with hopping between small molecules (i.e. identical chromophores) in which case $\Delta E_{ij} = 0$.}
-    \item{The drift component is pretty small. In the case of an applied voltage of 0.2 (corresponding to a field of around 1E7 Vm$^{-1}$), the component contribues $\sim 1$ meV to the $\Delta E$.
+    \item{The drift component is pretty small. In the case of an applied voltage of 0.2 (corresponding to a field of around $1 \times 10^{7}$ Vm$^{-1}$), the component contribues $\sim 1$ meV to the $\Delta E$.
         This could be on the small side, or it could be exactly right - I just don't know.
         One thing I can do is take a look at the Durham data (on my laptop) to see if we ever output those magnitudes anywhere that might be able to give me some idea of if this is correct or not.}
     \item{The Coulombic effects have a magnitude of several hundred meV (for immediately dissociated carriers), and it feels sensible that the Coulomb potential is of similar order to the energetic disorder arising from chromophore fluctuations.}
 \end{itemize}
+\clearpage
+
+
+\section{KMC Timescales}
+
+
+\begin{itemize}
+    \item{A Fermi-estimate of the timescales involved in the KMC indicated that the carrier hops in P3HT (tons of single-monomer chromophores that are super close together) suggested that we were spanning $\sim 16$ orders of magnitude in time between our fastest and slowest events, from $1 \times 10^{-18}$ s for the fastest carrier hops and $1 \times 10^{-2}$ s for the photoinjections.}
+    \item{Perhaps we can use the FRET hopping prefactor here to slow down the carrier hops as well, given that we justify the prefactor due to the tiny hops that occur between the densely packed chromophores. \textcolor{red}{Using this prefactor slows down the mobilities that we obtained using the molecular KMC}. The advantage is that this saves 4 orders of magnitude, bringing the difference down to 12.}
+    \item{The incident flux was set to 0.01 mW/cm$^{2}$ rather than the 100 mW/cm$^{2}$ that correctly corresponds to AM1.5. This reduces the number of orders of magnitude by another 4 to 8.}
+\end{itemize}
+
+\begin{figure}[h!]\centering
+	\includegraphics[width=0.5\textwidth]{Figures/EventTimeDist.pdf}
+    \caption{The distribution of the event timescales observed in a device simulation consisting of around 500,000 KMC iterations (corresponding to 23 photoinjections)}
+	\label{fig:eventTimeDist}
+\end{figure}
+
+\begin{itemize}
+    \item{Figure \ref{fig:eventTimeDist} shows the resultant distribution of timescales in the device simulations, after about 500,000 iterations ($\sim 15$ minutes of runtime).}
+    \item{The following data can be obtained from the distribution:
+        \begin{itemize}
+            \item{Slowest Event = $5.00 \times 10^{-6}$ s}
+            \item{Fastest Event = $1.21 \times 10^{-17}$ s}
+            \item{Mean = $5.40 \times 10^{-11}$ s}
+            \item{STD = $1.04 \times 10^{-8}$ s}
+        \end{itemize}
+    }
+\item{The results show a computationally tangible distribution of event times. While the range is still 11 orders of magnitude, the vast majority of events occur between 10$^{-13}$ and 10$^{-10}$ s.}
+\end{itemize}
+
+
 
 \bibliography{refs}
 \bibliographystyle{unsrt}
