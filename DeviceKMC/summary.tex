@@ -239,6 +239,40 @@ These components will probably need a lot more testing, but preliminary data sho
 \item{The results show a computationally tangible distribution of event times. While the range is still 11 orders of magnitude, the vast majority of events occur between 10$^{-13}$ and 10$^{-10}$ s.}
 \end{itemize}
 
+Over the Freedom Day holiday, I ran a long simulation on my desktop to push the code to its limit and check for any more edge-cases that I might have missed.
+Here are the results of that investigation:
+
+\begin{itemize}
+    \item{Simulation Run-time:
+            \begin{itemize}
+                \item{Number of KMC Iterations: 47,994,911}
+                \item{Total Simulation Time: $4.58 \times 10^{-4}$ s}
+                \item{Total Wall-Clock Time: 23 hours 11 minutes 34 seconds}
+            \end{itemize}
+        }
+    \item{Simulation Events:
+            \begin{itemize}
+                \item{Excitons:
+                        \begin{itemize}
+                            \item{Total Number of Photoinjections: 501}
+                            \item{Total Number of Exciton Dissociations: 89}
+                            \item{Total Number of Exciton Recombinations: 412}
+                            \item{Exciton Dissociation Efficiency: 17.8\%}
+                        \end{itemize}
+                    }
+                \item{Carriers:
+                        \begin{itemize}
+                            \item{Total Number of Dark Injections: 0}
+                            \item{Total Number of Carrier Extractions: 0}
+                            \item{Total Number of Carrier Recombinations: 50}
+                            \item{Carrier Separation Efficiency: 43.8\%}
+                        \end{itemize}
+                    }
+            \end{itemize}
+        }
+\end{itemize}
+
+
 \clearpage
 \section{Charge Carrier Trajectories}
 
