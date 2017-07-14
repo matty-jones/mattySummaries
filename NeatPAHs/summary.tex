@@ -38,27 +38,43 @@
 \begin{document}
 \maketitle
 
+\section{Outstanding Questions}
+
+\textcolor{red}{The main questions we've tried to answer here are:
+    \begin{itemize}
+        \item{To what extent do our mobilities depend on the orientation of the periodic image? If we take the same molecular structure and rotate it such that the axis that the molecules stack along is different, do we get a different result?}
+        \item{Can we quantify that mobility trend in order to adjust for the rotation of the periodic box, and remove or at least reduce the mobility's sensitivity on it?}
+    \end{itemize}
+}
+
+\textcolor{blue}{I can't shake the feeling that this problem is too complex to adjust for.
+    We need to adjust for it because if we take the same morphology and then rotate it, we don't want to get different performance characteristics.
+    I think the only option might be to limit our KMC to just one periodic volume and calculate the mobilities from there.
+    That's going to require a bit of a rework of the mobility calculations though - we can't just run a carrier for X time if we do that, we'll need to get a bunch of t and disp data and then bin it to get the MSD trend.}
+
+\clearpage
+
 \section{Mobility Results}
 
 
 \begin{center}
-\begin{tabular}{| c | c | c | c | c | c |}
+\begin{tabular}{| c | c | c | c | c | c | c |}
 \hline
 \rule{0pt}{2.5ex} 
-\multirow{2}{*}{\textbf{ID}}&\multirow{2}{*}{\textbf{Simulation Name}}&\textbf{Density}&\textbf{Anisotropy}&\textbf{Anisotropy}&\textbf{Mobility}\\
-                            &&(\SI{}{\gcm})&(Arb. U.)&(Shape)&(\SI{}{\mobunits})\\
-\hhline{|======|}
-\textbf{\ccg1}&\rule{0pt}{2.5ex}\ccg PE\_MultiStack\_Eclipsed&\ccg 1.06&\ccg 0.9456&\ccg Thin Tube&\ccg5.87$\times 10^{0}$\\
-\textbf{2}&\rule{0pt}{2.5ex}PE\_SingleStack\_Eclipsed&1.06&0.2016&Fat Tube&$4.73\times 10^{-2}$\\
-\textbf{\ccg3}&\rule{0pt}{2.5ex}\ccg PE\_SingleStack\_Ordered&\ccg 1.06&\ccg 0.0844&\ccg Oblate Spheroid&\ccg5.09$\times 10^{-2}$\\
-\hhline{|======|}
-\textbf{4}&\rule{0pt}{2.5ex}PT\_MultiStack\_Eclipsed&1.01&0.1245&Oblate Spheroid&2.48$\times 10^{-1}$\\
-\textbf{\ccg5}&\rule{0pt}{2.5ex}\ccg PT\_MultiStack\_Ordered&\ccg 1.01&\ccg 0.1313&\ccg Oblate Spheroid&\ccg1.65$\times 10^{-3}$\\
-\textbf{6}&\rule{0pt}{2.5ex}PT\_SingleStack\_Eclipsed&1.01&0.7264&Thin Tube&1.15$\times 10^{0}$\\
-\textbf{\ccg7}&\rule{0pt}{2.5ex}\ccg PT\_SingleStack\_Ordered&\ccg 1.01&\ccg 0.2536&\ccg Oblate Spheroid&\ccg2.04$\times 10^{-1}$\\
-\hhline{------}
+\multirow{2}{*}{\textbf{ID}}&\multirow{2}{*}{\textbf{Simulation Name}}&\textbf{Density}&\textbf{Anisotropy}&\textbf{Anisotropy}&\textbf{Stacks}&\textbf{Mobility}\\
+                            &&(\SI{}{\gcm})&(Arb. U.)&(Shape)&(Arb. U.)&(\SI{}{\mobunits})\\
+\hhline{|=======|}
+\textbf{\ccg1}&\rule{0pt}{2.5ex}\ccg PE\_MultiStack\_Eclipsed&\ccg 1.06&\ccg 0.9456&\ccg Thin Tube&\ccg19&\ccg5.87$\times 10^{0}$\\
+\textbf{2}&\rule{0pt}{2.5ex}PE\_SingleStack\_Eclipsed&1.06&0.2016&Fat Tube&8&$4.73\times 10^{-2}$\\
+\textbf{\ccg3}&\rule{0pt}{2.5ex}\ccg PE\_SingleStack\_Ordered&\ccg 1.06&\ccg 0.0844&\ccg Oblate Spheroid&\ccg10&\ccg5.09$\times 10^{-2}$\\
+\hhline{|=======|}
+\textbf{4}&\rule{0pt}{2.5ex}PT\_MultiStack\_Eclipsed&1.01&0.1245&Oblate Spheroid&20&2.48$\times 10^{-1}$\\
+\textbf{\ccg5}&\rule{0pt}{2.5ex}\ccg PT\_MultiStack\_Ordered&\ccg 1.01&\ccg 0.1313&\ccg Oblate Spheroid&\ccg20&\ccg1.65$\times 10^{-3}$\\
+\textbf{6}&\rule{0pt}{2.5ex}PT\_SingleStack\_Eclipsed&1.01&0.7264&Thin Tube&1&1.15$\times 10^{0}$\\
+\textbf{\ccg7}&\rule{0pt}{2.5ex}\ccg PT\_SingleStack\_Ordered&\ccg 1.01&\ccg 0.2536&\ccg Oblate Spheroid&\ccg1&\ccg2.04$\times 10^{-1}$\\
+\hhline{-------}
 \end{tabular}\label{table:mob}
-\captionof{table}{The results from MorphCT for the various PAH morphologies.}
+\captionof{table}{The results from MorphCT for the various PAH morphologies. See the below section for a discussion of the stacks.}
 \end{center}
 
 Representative Values From Literature:
@@ -118,29 +134,80 @@ The intensity value for the route is currently taken to be \texttt{I $=$ np.log1
 
 \clearpage
 
+\subsection{Stacks}
+
+\begin{itemize}
+    \item{In these PAH systems, the chromophores describe individual molecules and not a polymer. As such the terms intra-chain and inter-chain to describe hopping are not appropriate.}
+    \item{Instead, it makes more sense to consider hops within a stack (intra-stack) and between stacks (inter-stack).}
+\end{itemize}
+
+The following describes the stack identification method, which uses an RDF-like technique to determine the nearest-neighbours to each chromophore.
+
+\begin{figure}[h!]\centering
+	\includegraphics[width=0.5\textwidth]{Figures/neighbourHist.pdf}
+    \caption{A representative histogram of the neighbour separation distribution.}
+	\label{fig:neighbourHist}
+\end{figure}
+
+\begin{itemize}
+    \item{Figure \ref{fig:neighbourHist} shows an example distribution of the chromophore neighbour separation.}
+    \item{There is a strong peak at low separations, around 4-5\AA. These represent the closest neighbours to each chromophore in the system, which lie within the same stack.}
+    \item{Picking a clustering cut-off somewhere in between this peak and the next peak at $> 10$\AA (which represents next-nearest neighbours and/or neighbouring stacks) will ensure that only chromophores that lie within the same stack will be added to the cluster list.}
+    \item{The code dynamically determines the midpoint between the two peaks and uses this as the cut-off for each morphology. In all cases, the cut-off is $\sim 6$\AA.}
+    \item{Chromophores that lie within the cut-off are then deemed as being in the same stack, which includes periodic boundary conditions}
+\end{itemize}
+
+
+The stack locations are as follows, and the totals summarised in Table \ref{table:mob}.
+
+
+\begin{figure}[h!]\centering
+	\includegraphics[width=\textwidth]{Figures/stacks.pdf}
+    \caption{The 3D visualisations of each stack in the PAH systems.}
+	\label{fig:stacks}
+\end{figure}
+
+
+\begin{itemize}
+    \item{The stack distributions look correct, and so it seems that the above method is sufficient to determine the quantity of stacks in the simulation.}
+    \item{Interestingly, it seems that while the PT does form a single-stack system, the `single-stack' PE systems that we look at actually contain 8 stacks (\textbf{2}) or 10 stacks (\textbf{3}).}
+    \item{In the case of \textbf{3}, one of the stacks is very large, and there are some `islands' due to spatial disorder in the system when compared to the eclipsed case. This could possibly be rectified by modifying the cutoff to include some of those islands, but it does suggest that \textcolor{red}{using the size of the largest stack in the system might be a good metric for quantifying the mobility trend}.}
+\end{itemize}
+
+\clearpage
+
 \subsection{Hopping Rate Distributions}
+
+Now that stacks are defined, we can now explore the difference in distribution between hops along the stack and between neighbouring stacks.
+\textcolor{red}{In particular, we're interested in why the Perylene results are odd.
+    PT appears to do everything that we'd expect:
+    \begin{enumerate}
+        \item{Eclipsed has higher mobility than Ordered}
+        \item{In the single-stack case, the anisotropy is significantly enhanced in eclipsed rather than disordered}
+        \item{The single-stack case has significantly higher mobility than the multi-stack case}
+    \end{enumerate}
+    However, in Perylene, trends 1) and 2) do not apply.
+}
 
 \begin{figure}[h!]\centering
 	\includegraphics[width=\textwidth]{Figures/DonorHoppingRateMixed.pdf}
-    \caption{The hopping-rate distributions for hops executed by carriers within the morphologies \textbf{1} - \textbf{7}.
-    \textcolor{red}{It would require some pretty clever ad-hoc code, but it would be really nice to split this into intra- and inter-stack hops!}}
+    \caption{The hopping-rate distributions for hops executed by carriers within the morphologies \textbf{1} - \textbf{7}. Red bars showhops within the same stack, whereas the blue bars describe hops between stacks. The bars themselves are stacked on top of each other.}
 	\label{fig:HoppingRateMixed}
 \end{figure}
 
 \begin{itemize}
     \item{The hopping rate distributions vary quite a lot! Some are single-mode, others bimodal, and one is tri-modal.}
-    \item{I will make more comments here after I've made the code mentioned above where we compare intra- to inter-stack hops}
-\end{itemize}
+    \item{The modality of the peaks generally corresponds to nearest and next-nearest neighbour hops. The exceptions are:
+        \begin{itemize}
+            \item{\textbf{1}: which shows a third peak because the stacks are closely spaced, meaning that hopping to a nearby stack is more likely to occur than hopping to the next-nearest neighbour within the same stack.}
+            \item{\textbf{4}: the bimodal behaviour is somewhat visible in the intra-stack hops but is washed out by a large number of inter-stack hops that occur with unimodal rates.}
+            \item{\textbf{5}: As \textbf{4}, but with fewer inter-stack hops available (likely due to increased separation between the stacks due to structural disorder and paracrystallinity within the stack (this morphology is ordered instead of eclipsed)).}
+        \end{itemize}}
+    \item{In morphology \textbf{1}, the fastest hops (that KMC preferentially samples) occur along the stack, with very few hops in between stacks.
+        This explains the high anisotropy of this system, and also why its mobility is so high (intra-stack hops occur more quickly).}
+    \item{Morphology \textbf{2} also has a high ratio of intra-to-inter-stack hopping at the fastest rates, however its anisotropy is significantly reduced.
+        This is likely because there is more of a mix of intra- and inter-stack hops at slightly lower rates, but still within the sampling window (rates $> 10^{13}$).}
 
-
-\clearpage
-
-
-\section{Outstanding Questions}
-
-
-\begin{itemize}
-    \item{TBA}
 \end{itemize}
 
 
