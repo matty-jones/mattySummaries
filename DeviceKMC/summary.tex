@@ -291,6 +291,22 @@ I am addressing this issue currently and will have new results available shortly
 
 \clearpage
 
+\section{Dark Current Injection}
+
+The issues with the dark current injection were significantly harder and deeper than I anticipated.
+
+\subsection{Electrodes Upside Down}
+At the highest level, I had my electrodes upside down, such that the cathode was trying to inject holes and the anode was trying to inject electrons - neither of which could occur in the simulations because of the bilayer morphology.
+Flipping the contacts around led to issues with incredibly fast injection occuring, leading to a saturation of the top and bottom layers of the device and populating the queues with insanely long hop times ($1 \times 10^{99}$ s) because of the ridiculous Coulombic landscape near the interface.
+
+
+\subsection{Injection Rates Too Fast}
+Incresed barrier
+No change
+Marcus not appropriate
+Tried MA
+Got Dist
+
 \bibliography{refs}
 \bibliographystyle{unsrt}
 
