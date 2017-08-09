@@ -38,6 +38,21 @@
 \begin{document}
 \maketitle
 
+\section{New Jobs, 08/17}
+
+\begin{itemize}
+    \item{One way around the issues we've been seeing is to run larger simulations that have multiple crystallites in them.
+        The intention is to avoid problems with generating one single crystal, and the issues associated with defects arising from the periodic structure by just having a much larger simulation volume to do everything in.}
+    \item{To this end, I am currently running a 5,000 molecule (100,000 atom) system of perylene called \textit{PE-dt0.001-n\_mol5000-phi1.15-P1-T11.0}.}
+    \item{This statepoint has been selected in order to approximate experimental densities (phi 1.15) and a temperature at which we expect the system to be ordered (T < 13.0).}
+    \item{I actually ran simulations that were T = 13, 12, and 11, but all of them demonstrated a constant potential energy evolution and, while some crystallites were observed in the system, there didn't seem to be signficant order after 48 hours.}
+    \item{Now, I am taking the T = 11 system, and dropping it down to T = 9 to run for 96 hours. This will hopefully be sufficiently cold and long enough for the system to form a more ordered structure with multiple, ordered crystallites.}
+    \item{The data will be reported here when I have it.}
+\end{itemize}
+
+\newpage
+
+
 \section{Outstanding Questions}
 
 \textcolor{red}{The main questions we've tried to answer here are:
