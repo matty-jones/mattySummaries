@@ -301,11 +301,22 @@ Flipping the contacts around led to issues with incredibly fast injection occuri
 
 
 \subsection{Injection Rates Too Fast}
-Incresed barrier
-No change
-Marcus not appropriate
-Tried MA
-Got Dist
+
+\begin{enumerate}
+    \item{Firstly I tried increasing the injection barrier, but that just prolonged the time until the saturation occured and the simulation crashed.}
+    \item{After thinking about it some more, I became convinced that Marcus hopping is not appropriate for carrier injection.
+        What is the reorganisation energy of the electrode? 
+    What about the transfer integral between the electrode and the chromophore?}
+    \item{Instead I tried a simplified Miller Abrahams hopping equation, with a manually specified prefactor, and a simple distance calculation from the electrode to the injection site.}
+    \item{The prefactor was calibrated to give a sensible injection rate distribution in the event times within the 5-6 orders of magnitude of time that we can explore using this methodology.}
+    \item{This appeared to reconcile some of the problems, but the output J-V curves were still messy and slow.}
+\end{enumerate}
+
+Work on this morphology has been suspended indefinitely.
+Instead, I will be using a less complex system (called testSimple) containing just one moiety of donor and acceptor material rather than two each.
+The device is 3x3x3 instead of 9x9x9, and each moiety is the same size (10 nm).
+Additionally, the more computationally intensive calculations have been vectorised to try and speed up the calculations and reduce total simulation wall-clock time.
+Please see the `SimpleDeviceKMC' summary for more details.
 
 \bibliography{refs}
 \bibliographystyle{unsrt}
