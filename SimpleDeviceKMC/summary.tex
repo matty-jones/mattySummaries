@@ -163,9 +163,6 @@ We need to look at the network information to see the reason why the MSD is so b
 \end{figure}
 
 
-
-
-
 It is clear from figure~\ref{fig:network} that the P3HT is very well interconnected compared to the PCBM in all morphologies.
 In fact, the PCBM systems are so poorly calculated that carrier motion either becomes throttled due to a very small number of routes out of the periodic simulation box (in the case of Neat PCBM), or indeed become completely trapped such that the electron's only option is to hop between the same two or three molecules, saturating the MSD and leading to very low mobilities.
 The anisotropy graphs also bear out this hypothesis - the holes are permitted to move $\sim$ 100 nm in the longest simulations, whereas the electrons are confined to nearby simulation volumes ($\sim$ 10 nm in the case of neat PCBM) or are completely locked into the initial volume ($\sim$ 4 nm in the case of the Mix).
@@ -189,6 +186,69 @@ However, an extremely large cut-off like this would dramatically increase the nu
 \textcolor{blue}{Additionally, I am rerunning all of the structures again using opv\_cg, this time with the most up-to-date atom sizes according to Evan's work on the resultant diffraction patterns.
     Finally, the P3HT system is being run at a different state-point in order to try and promote ordered chain stacking.
 The results from this P3HT system might be able to elucidate why the disordered P3HT chains are able to produce such high mobilities, despite the high paracrystallinity.}
+
+
+\clearpage
+
+\section{Searching for ordered P3HT chains}
+
+The P3HT-containing jobs I ran over the weekend with the improved forcefield and the following parameters:
+\begin{itemize}
+    \item{$\phi$ = 0.9}
+    \item{$T$ = 3.5}
+    \item{$\epsilon$ = 0.8}
+\end{itemize}
+did not result in ordered $pi$-stacked chains as anticipated.
+The above parameters were selected because Evan's clustering criteria were satisfied more frequently for these systems, resulting in larger clusters in the morphology - usually an indication of better ordering.
+
+
+\begin{figure}[h!]\centering
+    \begin{tabular}{cc}
+        \includegraphics[width=0.5\textwidth]{Figures/P3HTPE.pdf}&
+	    \includegraphics[width=0.5\textwidth]{Figures/P3HTMorph.png}
+    \end{tabular}
+    \caption{The Neat P3HT system. Left: The potential energy evolution over the 96 hour simulation, with the first hundred datapoints removed. Right: The resultant morphology. Only the thiophene rings are shown for clarity.}
+	\label{fig:P3HTPE}
+\end{figure}
+
+
+The Neat P3HT system, containing 265 chains was rerun using the above parameters for 96 hours.
+Figure~\ref{fig:device} shows that the morphology appears to have equilibrated in this time, however, the resultant morphology is still disordered (Figure~\ref{fig:P3HTMorph}).
+This is unusual, since other systems with different numbers of molecules have shown the correct $\pi$-stacking at this statepoint, and the PE does not appear to be evolving in this case.
+
+
+\begin{figure}[h!]\centering
+    \begin{tabular}{cc}
+        \includegraphics[width=0.5\textwidth]{Figures/P3HT250.pdf}&
+	    \includegraphics[width=0.5\textwidth]{Figures/P3HT500.pdf}
+    \end{tabular}
+    \caption{Potential energy evolution for Evan's 250-molecule P3HT system (left) and for 500 molecules (right).
+    The X-axis is in units of 1E5 timesteps, so the total simulation runtimes are comparable to the current data.}
+	\label{fig:P3HTPEs}
+\end{figure}
+
+
+A useful comparison here is the absolute value of the potential energy in energy units per molecule between this and the ordered P3HT systems, to see how far away the system shown in~\ref{fig:P3HTPE} is in terms of free energy from forming the $\pi$ stacks.
+Figure~\ref{fig:P3HTPEs} shows the evolution in potential energy as a function of simulation time for systems containing 250 and 500 molecules.
+It is clear that the shapes of the curves are quite different and strongly dependent on the number of molecules in each system.
+The simulations were run at slightly higher temperatures (T = 4.0), but otherwise the same statepoint.
+The P3HT model is slightly different to the one used in the current work - the thiophene carbon sigma is 3.8~\AA~in Figure~\ref{fig:P3HTPEs} instead of the 3.1~\AA~used now.
+
+
+\begin{center}
+\begin{tabular}{| c | c | c |}
+\hline
+\rule{0pt}{2.5ex} 
+\textbf{Number Of Molecules}&\textbf{Equilibrated Total PE}&\textbf{Equilibrated PE/molecule}\\
+\hhline{|===|}
+\ccg 265&\ccg \rule{0pt}{2.5ex}193000&\ccg 728.30\\
+250&\rule{0pt}{2.5ex}173000&692.00\\
+\ccg 500&\ccg \rule{0pt}{2.5ex}210000&\ccg 420.00\\
+\hhline{---}
+\end{tabular}\label{table:PE}
+\captionof{table}{The potential energy at equilibration for the current system (265 molecules) and the previous two Neat P3HT systems run by Evan (250 and 500 molecules).
+All energies are given in energy units, which are consistent between the three simulations.}
+\end{center}
 
 
 
