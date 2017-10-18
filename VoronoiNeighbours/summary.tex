@@ -56,16 +56,19 @@ It turns out it has more of an effect than I expected.}
 
 
 \begin{itemize}
-    \item{The mobility trends seem unaffected between cut-off and Voronoi, as well as the origFG and newFG systems. 
+    \item{The mobility trends seem unaffected between cut-off and Voronoi.
             We still get the same 2-3 order of magnitude decrease in mobility from the ordered to disordered morphologies, as well as a general increase by 2 OOM on the mobility as the morphology evolves, which is in agreement with what we saw from the cut-off data.
-            However, the absolute values of the mobility are quite different.
-            OrigFG describes an order-of-magnitude increase in mobility across the board, with NewFG resulting in an additional order of magnitude increase on top of that.
-        I don't know why this is the case.}
-    \item{I'm very confused about the origFG temperature jobs (\textbf{16} to \textbf{20}).
-        I deleted the previous chromophore data before importing the original fine-grained morphology and checked that the chromophore neighbours were different (they were different to both the newFG, and the original cut-off data that we first gave to Olga).
-    This convinced me that the disconnected stacks we see in in the 3D connection heatmap (in contrast to the well-connected stacks we see in the newFG case \textbf{1}) are a function of the fine-graining which we are very sensitive to.
-However, the 3D heatmap for \textbf{30} shows strongly connected stacks again.
-This inconsistency between \textbf{30} and \textbf{16} is a big red flag because they should be basically identical - either \textbf{16} is remembering previous chromophore connection data (unlikely given that I wiped the chromophore list from the pickle) or \textbf{21-30} are not the morphology I think they are and are somehow using the newly fine-grained atomistic morphology (also unlikely given that the 3D heatmaps of \textbf{21-30} do look different to \textbf{6-15}, so it's not the exact same system being run again).}
+            However, the absolute values of the mobility are quite different, with an increase of about 2 orders of magnitude across the board from the previous data.
+            This is somewhat unusual, as we can safely expect that longer-range hops to next-nearest-neighbours are permitted in the cut-off case, but not when the neighbourlist is calculated through Voronoi analysis (which should only consider first-nearest-neighbour hops with adjacent Voronoi cells).
+            Perhaps we were diluting our neighbour landscape by including slow, long-range hops, which were sometimes selected during the KMC, leading to a decreased overall mobility.
+        }
+    \item{The differences between the origFG and the newFG data looks pretty significant initially, but on closer inspection, the $T = 2.25$ data has a pretty horrible MSD fit.
+            When this datapoint is treated as an outlier, the other disordered mobilities have similar values, each of which is about 1 order of magnitude lower than the ordered mobility.
+            This difference is less than we observed previously using the cut-off, but still qualitatively suggests a dichotomy between the ordered and disordered simulations.
+        Right now, I don't have much intuition why the $T = 2.25$ fit is so rough.
+    I'm continuing to run the job for another 24 hours and see if it sorts itself out, but we'll have to see.}
+    \item{The issue with the origFG temperature jobs has been rectified.
+        The 3D connection heatmap \textbf{16} now looks like \textbf{30} as expected.}
 \item{The anisotropies of \textbf{17-20} and \textbf{21-26} show that carriers aren't leaving the simulation volume.
     This is born out by the 3D heatmaps which show poorly connected domains and islands, and crappy MSD fits.
     This isn't unsurprising for the time-dependent morphologies \textbf{21-26} (very disordered initial morphology results in more islands and trapped charges), but suggests that the Voronoi analysis isn't suitable for the origFG temperature-dependent systems \textbf{17-20}.
@@ -74,7 +77,7 @@ Why is this? I feel like the fineGraining shouldn't affect the efficacy of Voron
 \item{The Voronoi analysis has dramatically diminished all correlations between the order and the percentage of intra-chain hops performed, equalising the intra-chain proportion to 12\%-18\% across the board.
         Interestingly, this appears to have gone some way to solving our KMC sampling issue, where if the majority of high-hopping-rate hops are along the chain the trapping gets significantly worse.
         For instance, systems \textbf{2-5} have solely intra-molecular hops on the right hand side of the distribution, but still good anisotropies and MSD fits, whereas \textbf{6-15} have more balanced intra-/inter- hops at the high end but good anisotropies and MSD fits.
-        It looks like cutting out the "next-nearest-intra-chain-neighbours" and beyond, which were available in the previous cut-off runs, has reduced the number of intra-chain hops overall and allowed us to continue to sample the inter-chain hops.
+        It looks like cutting out the `next-nearest-intra-chain-neighbours' and beyond, which were available in the previous cut-off runs, has reduced the number of intra-chain hops overall and allowed us to continue to sample the inter-chain hops.
     }
 \end{itemize}
 
@@ -91,40 +94,40 @@ Why is this? I feel like the fineGraining shouldn't affect the efficacy of Voron
 \hhline{|=======|}
 \multicolumn{7}{| c |}{{\ccg}NewFG Runs}\\
 \hhline{|=======|}
-\textbf{1}&\rule{0pt}{2.5ex}newFG-p1-L15-f0.0-P0.1-T1.5-e0.5& 1.676& 0.0676& ---&1.17$\times 10^{1}$&12.53\%\\
+\textbf{1}&\rule{0pt}{2.5ex}newFG-p1-L15-f0.0-P0.1-T1.5-e0.5&1.676&0.0676&---&1.17$\times 10^{1}$&12.53\%\\
 {\ccg}\textbf{2}&{\ccg}\rule{0pt}{2.5ex}newFG-p1-L15-f0.0-P0.1-T1.75-e0.5&{\ccg}1.061&{\ccg}0.0065&{\ccg}Spherical&{\ccg}3.48$\times 10^{-1}$&{\ccg}17.59\%\\
-\textbf{3}&\rule{0pt}{2.5ex}newFG-p1-L15-f0.0-P0.1-T2.0-e0.5& 0.892& 0.0026& Spherical&4.46$\times 10^{-1}$&17.58\%\\
+\textbf{3}&\rule{0pt}{2.5ex}newFG-p1-L15-f0.0-P0.1-T2.0-e0.5&0.892&0.0026&Spherical&4.46$\times 10^{-1}$&17.58\%\\
 {\ccg}\textbf{4}&{\ccg}\rule{0pt}{2.5ex}newFG-p1-L15-f0.0-P0.1-T2.25-e0.5&{\ccg}0.787&{\ccg}0.0044&{\ccg}Spherical&{\ccg}5.52$\times 10^{-1}$&{\ccg}17.83\%\\
-\textbf{5}&\rule{0pt}{2.5ex}newFG-p1-L15-f0.0-P0.1-T2.5-e0.5& 0.685& 0.0041& Spherical&4.03$\times 10^{-1}$&18.00\%\\
+\textbf{5}&\rule{0pt}{2.5ex}newFG-p1-L15-f0.0-P0.1-T2.5-e0.5&0.685&0.0041&Spherical&4.03$\times 10^{-1}$&18.00\%\\
 \hhline{|=======|}
-{\ccg}\textbf{6}&{\ccg}\rule{0pt}{2.5ex}newFG-0001\_withImages&{\ccg} 1.061&{\ccg} 0.0059&{\ccg} Spherical&{\ccg}2.65$\times 10^{-1}$&{\ccg}17.46\%\\
+{\ccg}\textbf{6}&{\ccg}\rule{0pt}{2.5ex}newFG-0001\_withImages&{\ccg}1.061&{\ccg}0.0059&{\ccg}Spherical&{\ccg}2.65$\times 10^{-1}$&{\ccg}17.46\%\\
 \textbf{7}&\rule{0pt}{2.5ex}newFG-0005\_withImages&1.336&0.0077&Spherical&4.68$\times 10^{-2}$&13.34\%\\
-{\ccg}\textbf{8}&{\ccg}\rule{0pt}{2.5ex}newFG-0010\_withImages&{\ccg} 1.345&{\ccg} 0.0063&{\ccg} Spherical&{\ccg}7.50$\times 10^{-1}$&{\ccg}13.73\%\\
+{\ccg}\textbf{8}&{\ccg}\rule{0pt}{2.5ex}newFG-0010\_withImages&{\ccg}1.345&{\ccg}0.0063&{\ccg}Spherical&{\ccg}7.50$\times 10^{-1}$&{\ccg}13.73\%\\
 \textbf{9}&\rule{0pt}{2.5ex}newFG-0020\_withImages&1.428&0.0137&Spherical&1.22$\times 10^{0}$&13.23\%\\
-{\ccg}\textbf{10}&{\ccg}\rule{0pt}{2.5ex}newFG-0040\_withImages&{\ccg} 1.450&{\ccg} 0.0077&{\ccg} Spherical&{\ccg}7.92$\times 10^{-2}$&{\ccg}13.78\%\\
+{\ccg}\textbf{10}&{\ccg}\rule{0pt}{2.5ex}newFG-0040\_withImages&{\ccg}1.450&{\ccg}0.0077&{\ccg}Spherical&{\ccg}7.92$\times 10^{-2}$&{\ccg}13.78\%\\
 \textbf{11}&\rule{0pt}{2.5ex}newFG-0100\_withImages&1.510&0.0228&Spherical&4.33$\times 10^{0}$&12.89\%\\
-{\ccg}\textbf{12}&{\ccg}\rule{0pt}{2.5ex}newFG-0200\_withImages&{\ccg} 1.554&{\ccg} 0.0721&{\ccg} Ellipsoid&{\ccg}4.94$\times 10^{0}$&{\ccg}12.74\%\\
+{\ccg}\textbf{12}&{\ccg}\rule{0pt}{2.5ex}newFG-0200\_withImages&{\ccg}1.554&{\ccg}0.0721&{\ccg}Ellipsoid&{\ccg}4.94$\times 10^{0}$&{\ccg}12.74\%\\
 \textbf{13}&\rule{0pt}{2.5ex}newFG-0300\_withImages&1.593&0.1041&Disk&6.44$\times 10^{0}$&12.61\%\\
-{\ccg}\textbf{14}&{\ccg}\rule{0pt}{2.5ex}newFG-0500\_withImages&{\ccg} 1.638&{\ccg} 0.1186&{\ccg} Disk&{\ccg}9.26$\times 10^{0}$&{\ccg}12.55\%\\
+{\ccg}\textbf{14}&{\ccg}\rule{0pt}{2.5ex}newFG-0500\_withImages&{\ccg}1.638&{\ccg}0.1186&{\ccg}Disk&{\ccg}9.26$\times 10^{0}$&{\ccg}12.55\%\\
 \textbf{15}&\rule{0pt}{2.5ex}newFG-1000\_withImages&1.662&0.0957&Disk&9.11$\times 10^{0}$&12.49\%\\
 \hhline{|=======|}
 \multicolumn{7}{| c |}{{\ccg}OrigFG Runs}\\
 \hhline{|=======|}
-\textbf{16}&\rule{0pt}{2.5ex}origFG-p1-L15-f0.0-P0.1-T1.5-e0.5&1.676&0.2522&---&5.99$\times 10^{0}$&12.70\%\\
-{\ccg}\textbf{17}&{\ccg}\rule{0pt}{2.5ex}origFG-p1-L15-f0.0-P0.1-T1.75-e0.5&{\ccg} 1.061&{\ccg} 0.0020&{\ccg} Spherical&{\ccg} 6.24$\times 10^{-3}$&{\ccg} 17.41\%\\
-\textbf{18}&\rule{0pt}{2.5ex}origFG-p1-L15-f0.0-P0.1-T2.0-e0.5&0.892&0.0105&Spherical&5.16$\times 10^{-3}$&17.77\%\\
-{\ccg}\textbf{19}&{\ccg}\rule{0pt}{2.5ex}origFG-p1-L15-f0.0-P0.1-T2.25-e0.5&{\ccg} 0.787&{\ccg} 0.0014&{\ccg} Spherical&{\ccg} 4.80$\times 10^{-3}$&{\ccg} 18.13\%\\
-\textbf{20}&\rule{0pt}{2.5ex}origFG-p1-L15-f0.0-P0.1-T2.5-e0.5&0.685&0.0055&Spherical&4.71$\times 10^{-3}$&18.52\%\\
+\textbf{16}&\rule{0pt}{2.5ex}origFG-p1-L15-f0.0-P0.1-T1.5-e0.5&1.676&0.1074&Disk&$8.06\times 10^{0}$&12.67\%\\
+{\ccg}\textbf{17}&{\ccg}\rule{0pt}{2.5ex}origFG-p1-L15-f0.0-P0.1-T1.75-e0.5&{\ccg}1.061&{\ccg}0.0038&{\ccg}Spherical&{\ccg}5.18$\times 10^{-1}$&{\ccg}17.38\%\\
+\textbf{18}&\rule{0pt}{2.5ex}origFG-p1-L15-f0.0-P0.1-T2.0-e0.5&0.892&0.0023&Spherical&4.36$\times 10^{-1}$&17.72\%\\
+{\ccg}\textbf{19}&{\ccg}\rule{0pt}{2.5ex}origFG-p1-L15-f0.0-P0.1-T2.25-e0.5&{\ccg}0.787&{\ccg}0.0038&{\ccg}Spherical&{\ccg}3.20$\times 10^{-2}$&{\ccg}18.12\%\\
+\textbf{20}&\rule{0pt}{2.5ex}origFG-p1-L15-f0.0-P0.1-T2.5-e0.5&0.685&0.0031&Spherical&4.00$\times 10^{-1}$&18.44\%\\
 \hhline{|=======|}
-{\ccg}\textbf{21}&{\ccg}\rule{0pt}{2.5ex}origFG-0001\_withImages&{\ccg} 1.061&{\ccg} 0.0045&{\ccg} Spherical&{\ccg} $1.73\times 10^{-1}$&{\ccg} 17.50\%\\
+{\ccg}\textbf{21}&{\ccg}\rule{0pt}{2.5ex}origFG-0001\_withImages&{\ccg} 1.061&{\ccg}0.0045&{\ccg}Spherical&{\ccg}$1.73\times 10^{-1}$&{\ccg}17.50\%\\
 \textbf{22}&\rule{0pt}{2.5ex}origFG-0005\_withImages&1.336&0.0041&Spherical&1.00$\times 10^{-2}$&16.97\%\\
-{\ccg}\textbf{23}&{\ccg}\rule{0pt}{2.5ex}origFG-0010\_withImages&{\ccg} 1.345&{\ccg} 0.0073&{\ccg} Spherical&{\ccg} 4.06$\times 10^{-2}$&{\ccg} 16.99\%\\
+{\ccg}\textbf{23}&{\ccg}\rule{0pt}{2.5ex}origFG-0010\_withImages&{\ccg} 1.345&{\ccg}0.0073&{\ccg}Spherical&{\ccg}4.06$\times 10^{-2}$&{\ccg}16.99\%\\
 \textbf{24}&\rule{0pt}{2.5ex}origFG-0020\_withImages&1.428&0.0107&Spherical&1.84$\times 10^{-2}$&17.13\%\\
-{\ccg}\textbf{25}&{\ccg}\rule{0pt}{2.5ex}origFG-0040\_withImages&{\ccg} 1.450&{\ccg} 0.0112&{\ccg} Spherical&{\ccg} 1.68$\times 10^{-2}$&{\ccg} 16.89\%\\
+{\ccg}\textbf{25}&{\ccg}\rule{0pt}{2.5ex}origFG-0040\_withImages&{\ccg} 1.450&{\ccg}0.0112&{\ccg}Spherical&{\ccg}1.68$\times 10^{-2}$&{\ccg}16.89\%\\
 \textbf{26}&\rule{0pt}{2.5ex}origFG-0100\_withImages&1.510&0.0154&Spherical&2.79$\times 10^{-2}$&14.28\%\\
-{\ccg}\textbf{27}&{\ccg}\rule{0pt}{2.5ex}origFG-0200\_withImages&{\ccg} 1.554&{\ccg} 0.0631&{\ccg} Ellipsoid&{\ccg} $1.72\times 10^{0}$&{\ccg} 13.19\%\\
+{\ccg}\textbf{27}&{\ccg}\rule{0pt}{2.5ex}origFG-0200\_withImages&{\ccg} 1.554&{\ccg}0.0631&{\ccg}Ellipsoid&{\ccg}$1.72\times 10^{0}$&{\ccg}13.19\%\\
 \textbf{28}&\rule{0pt}{2.5ex}origFG-0300\_withImages&1.593&0.1113&Disk&1.09$\times 10^{0}$&12.99\%\\
-{\ccg}\textbf{29}&{\ccg}\rule{0pt}{2.5ex}origFG-0500\_withImages&{\ccg} 1.638&{\ccg} 0.1013&{\ccg} Disk&{\ccg} 4.73$\times 10^{0}$&{\ccg} 12.69\%\\
+{\ccg}\textbf{29}&{\ccg}\rule{0pt}{2.5ex}origFG-0500\_withImages&{\ccg} 1.638&{\ccg}0.1013&{\ccg}Disk&{\ccg}4.73$\times 10^{0}$&{\ccg}12.69\%\\
 \textbf{30}&\rule{0pt}{2.5ex}origFG-1000\_withImages&1.662&0.1025&Disk&2.74$\times 10^{0}$&12.64\%\\
 \hhline{-------}
 \end{tabular}\label{table:mob}
