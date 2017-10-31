@@ -43,16 +43,9 @@
 
 The following jobs have all been run using the new Voronoi cell neighbourlist calculation, rather than the radial cut-off that we used previously.
 
-\textcolor{red}{NOTE, In order to test the full pipeline after the recent changes to MorphCT, I have both rerun the old morphologies using the new Voronoi cell neighbourlist calculation (origFG), as well as the complete pipeline again including a new fine-graining iteration (newFG).
-It seems that the new fine-graining leads to dramatically different mobilities (increased by 3ish orders of magnitude).
-In all cases, the general trend between low and high temperature and the morphology evolution time tend to be pretty consistent, but it does look like our methodology is WAAAY more sensitive than I thought to the fine-graining process.
-}
-
-\textcolor{blue}{UPDATE: The only difference between the origFG and the newFG forcefields is that I dramatically damped down the forces in the DPD phase of the MD chain.
-    In the origFG field, $A = 100.0$, $\gamma = 0$, and $r_{\text{cut}} = 2.96$.
-    In the newFG field, $A = 10.0$, $\gamma = 0$, and $r_{\text{cut}} = 2.00$.
-    The change was made to improve stability during this and subsequent MD phases during fine-graining, and I thought it wouldn't make a difference as this phase is very short and only used to prevent atoms from overlapping initially to allow us to switch to LJ without infinite forces.
-It turns out it has more of an effect than I expected.}
+In order to test the full pipeline after the recent changes to MorphCT, I have both rerun the old morphologies using the new Voronoi cell neighbourlist calculation (origFG), as well as the complete pipeline again including a new fine-graining iteration (newFG).
+The only differences between the origFG and newFG runs are the DPD parameters of the second molecular dynamics phase, which were softened in newFG to provide better results for PAHs and BDT-TPD.
+Otherwise, the forcefields are identical.
 
 
 \begin{itemize}
@@ -69,15 +62,24 @@ It turns out it has more of an effect than I expected.}
     I'm continuing to run the job for another 24 hours and see if it sorts itself out, but we'll have to see.}
     \item{The issue with the origFG temperature jobs has been rectified.
         The 3D connection heatmap \textbf{16} now looks like \textbf{30} as expected.}
-\item{The anisotropies of \textbf{17-20} and \textbf{21-26} show that carriers aren't leaving the simulation volume.
+\item{The anisotropies of \textbf{21-26} show that carriers aren't leaving the simulation volume.
     This is born out by the 3D heatmaps which show poorly connected domains and islands, and crappy MSD fits.
-    This isn't unsurprising for the time-dependent morphologies \textbf{21-26} (very disordered initial morphology results in more islands and trapped charges), but suggests that the Voronoi analysis isn't suitable for the origFG temperature-dependent systems \textbf{17-20}.
-Why is this? I feel like the fineGraining shouldn't affect the efficacy of Voronoi neighbourlist calculation - at the end of the day we only care about the COM centres of the chromophores.
+    This is somewhat unsurprising, given that the very disordered initial morphologies results in more islands and trapped charges.
 }
 \item{The Voronoi analysis has dramatically diminished all correlations between the order and the percentage of intra-chain hops performed, equalising the intra-chain proportion to 12\%-18\% across the board.
         Interestingly, this appears to have gone some way to solving our KMC sampling issue, where if the majority of high-hopping-rate hops are along the chain the trapping gets significantly worse.
         For instance, systems \textbf{2-5} have solely intra-molecular hops on the right hand side of the distribution, but still good anisotropies and MSD fits, whereas \textbf{6-15} have more balanced intra-/inter- hops at the high end but good anisotropies and MSD fits.
         It looks like cutting out the `next-nearest-intra-chain-neighbours' and beyond, which were available in the previous cut-off runs, has reduced the number of intra-chain hops overall and allowed us to continue to sample the inter-chain hops.
+    }
+\item{We must remember that ORCA only considers pairs of chromophores.
+        Consider for example a line of 3 chromophores labelled A, B, and C, close enough that A and B have non-zero transfer integrals, as do B and C.
+        We would expect transport to be good between A $\rightarrow$ B, B $\rightarrow$ C, but worse for A $\rightarrow$ C as there is a chromophore in the middle of them.
+        If the separation between A and C is less than the cut-off, then A $\rightarrow$ C will be included and the transfer integral calculated.
+        This would not be an issue, providing that $T_{AC} < T_{AB}$, however there is no guarantee of that because ORCA will only see the chromophores A and C, with no B in between them.
+        We already know that orientation has a larger effect on the transfer integral than separation, so this could lead to $T_{AC} > T_{AB}$, making it a more preferential hop, and artificially increasing our mobility.
+        Even if $T_{AC} \sim T_{AB}$, we must remember that the carrier is hopping further as $r_{AC} > r_{AB}$, which again can lead to an inflated mobility.
+        The above also describes the issue with including every pair of chromophores in the system and letting ORCA decide whether the hops are important or not - because ORCA does not see any chromophores in between, its results cannot be trusted beyond nearest-neighbour hops.
+        Voronoi analysis guarantees that we only consider these nearest-neighbour hops and removes this problem entirely, which is why I believe our results are more physical using it, even if they approximate the experimental results less accurately.
     }
 \end{itemize}
 
