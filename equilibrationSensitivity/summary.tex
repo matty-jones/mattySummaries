@@ -1,0 +1,109 @@
+\documentclass[12pt]{article}
+%--------------------   start of the 'preamble'
+%
+\usepackage{graphicx,amssymb,amstext,amsmath,color}
+\usepackage[margin=2cm]{geometry}
+\usepackage{abstract}
+\usepackage{setspace}
+\usepackage[footnotesize,bf]{caption}
+
+% TABLE
+\usepackage{multicol,hhline,colortbl,multirow}
+\usepackage{braket}
+\usepackage{siunitx}
+\usepackage{hyperref}
+\usepackage{authblk}
+\usepackage{siunitx}
+\usepackage{adjustbox}
+\usepackage{mathrsfs}
+%%\usepackage[sort&compress]{natbib}
+%%\bibpunct{(}{)}{,}{a}{, }{;}
+%
+\usepackage[sort&compress]{natbib}
+\bibpunct{[}{]}{,}{s}{}{;}
+
+
+\definecolor{gray}{gray}{0.8}
+\def\mobunits{\square\centi\meter\per\volt\per\second}
+\def\gcm{\gram\per\cubic\centi\meter}
+\def\ccg{\cellcolor{gray}}
+
+\renewcommand{\labelitemii}{$\circ$}
+\renewcommand{\bibname}{References}
+
+
+\title{MorphCT Results - Equilibration Sensitivity}
+\author{Matthew Jones}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Preface}
+
+%This document describes the results obtained during `AIChE week' 2017.
+%There are lots of different things being explored simultaneously, so I'll try and explain what each set of results pertains to.
+I spent a while updating and improving our plotting subroutines.
+The graphs look mostly the same, but \textcolor{red}{I will be no longer using bold numbers to indicate morphology types, and figures will no longer be organised by plot type (i.e. hopping rate, network, etc.) with each panel corresponding to a different morphology.}
+To get a better idea of the differences between plots, each figure will be one page describing one morphology completely, with each panel showing a different plot type for that morphology.
+This makes it easier to open windows side by side and get the complete morphology picture.
+It also has the advantage of the plotting being completely automated, dramatically reducing labour time generating the figures.
+
+
+\section{What effect does fully equilibrating after fine-graining have on the charge transport properties?}
+
+
+\subsection{Explanation}
+
+
+\textcolor{red}{The temperature profile for these morphologies looks super weird, I think I cranked the thermostat up too high (10.0 from 1.0) after I noticed the temperature oscillations last run.
+Effectively, the strong coupling prevented the atoms from moving sufficiently and strongly throttled the velocieis, tanking the temperature down to very low (0.05ish, when it should be around 0.5 using the correct temperature units for MorphCT).
+The morphologies still look fine, so I continue to report the results below, but in the meantime I am doing a sweep over multiple values of tau (0.5, 1.0, 5.0, 10.0), and I will add these results to this summary when I get them.
+}
+
+
+I took the pristine P3HT results that we had previously (using the Voronoi cells for neighbour calculations) and compared them to systems that were equilibrated for a long time during the final MD phase of the molecular dynamics process.
+The final MD phase of the `Unequilibrated' systems ran for 1E5 timesteps, whereas the `equilibrated' systems were run for 1E7 timesteps instead.
+Figure \ref{fig:Energy} shows the potential energy evolution for the T = 1.5 system.
+
+
+\begin{figure}[h!]\centering
+	\includegraphics[width=\textwidth]{Figures/PE.pdf}
+    \caption{The evolution of the total potential energy for the p1-L15-f0.0-P0.1-T1.5-e0.5 systems.
+    a) The original `unequilibrated' system, where the final MD phase ran for 1E5 timesteps.
+    b) The new `equilibrated' system, where the final MD phase ran for 1E7 timesteps.
+    In both cases, the potential energy was dumped 1000 times, so there were 100 timesteps between each energy value in the unequilibrated case, and 10,000 timesteps in the equilibrated case.
+    Only the final 800 energy values recorded are shown here.}
+	\label{fig:Energy}
+\end{figure}
+
+
+Figure \ref{fig:Mobility} shows the mobility curve differences between the two systems.
+
+
+\begin{figure}[h!]\centering
+	\includegraphics[width=\textwidth]{Figures/PE.pdf}
+    \caption{The evolution of the mobility for the neat P3HT state points.
+    a) The original `unequilibrated' system, where the final MD phase ran for 1E5 timesteps.
+    b) The new `equilibrated' system, where the final MD phase ran for 1E7 timesteps.
+}
+	\label{fig:Mobility}
+\end{figure}
+
+
+The mobility trend has somewhat washed out, as there is now a smaller difference between the ordered and the disordered morphologies.
+Additionally, there is now a more obvious decrement in mobility as a function of system temperature, allowing for some distinction between the disordered systems.
+The absolute values however are largely the same as previously, with less than an order of magnitude difference between them.
+
+
+\subsection{Original (Unequilibrated) Results}
+
+
+\subsection{New (Equilibrated) Results}
+
+
+\bibliography{refs}
+\bibliographystyle{unsrt}
+
+
+\end{document}
