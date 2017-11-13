@@ -219,39 +219,38 @@ This is unusual, since other systems with different numbers of molecules have sh
 
 \begin{figure}[h!]\centering
     \begin{tabular}{cc}
-        \includegraphics[width=0.5\textwidth]{Figures/P3HT250.pdf}&
-	    \includegraphics[width=0.5\textwidth]{Figures/P3HT500.pdf}
+        \includegraphics[width=0.5\textwidth]{Figures/P3HT500.pdf}&
+	    \includegraphics[width=0.5\textwidth]{Figures/P3HT1000.pdf}
     \end{tabular}
-    \caption{Potential energy evolution for Evan's 250-molecule P3HT system (left) and for 500 molecules (right).
-    The X-axis is in units of 1E5 timesteps, so the total simulation runtimes are comparable to the current data.}
+    \caption{Potential energy evolution for Evan's 500-molecule P3HT system (left) and for 1000 molecules (right).
+    The X-axis is in units of 1E5 timesteps, so the total simulation runtimes are comparable to the current data.
+    Note that these simulations are not quick the same statepoint as the current work, as they were run at T = 4.0, whereas the current work was run at T = 3.5.}
 	\label{fig:P3HTPEs}
 \end{figure}
 
 
-A useful comparison here is the absolute value of the potential energy in energy units per molecule between this and the ordered P3HT systems, to see how far away the system shown in~\ref{fig:P3HTPE} is in terms of free energy from forming the $\pi$ stacks.
-Figure~\ref{fig:P3HTPEs} shows the evolution in potential energy as a function of simulation time for systems containing 250 and 500 molecules.
-It is clear that the shapes of the curves are quite different and strongly dependent on the number of molecules in each system.
+A useful comparison here is the absolute value of the pair-potential energy in energy units per molecule between this and the ordered P3HT systems.
+This should give some idea of how far away the system shown in~\ref{fig:P3HTPE} is, in terms of free energy, from forming the $\pi$ stacks.
+Figure~\ref{fig:P3HTPEs} shows the evolution in the LJ pair potential energy as a function of simulation time for systems containing 500 and 1000 molecules.
+It is clear that the shapes of the curves are quite different to the current system.
 The simulations were run at slightly higher temperatures (T = 4.0), but otherwise the same statepoint.
 The P3HT model is slightly different to the one used in the current work - the thiophene carbon sigma is 3.8~\AA~in Figure~\ref{fig:P3HTPEs} instead of the 3.1~\AA~used now.
 
 
 \begin{center}
-\begin{tabular}{| c | c | c |}
+\begin{tabular}{| c | c | c | c | c |}
 \hline
 \rule{0pt}{2.5ex} 
-\textbf{Number Of Molecules}&\textbf{Equilibrated Total PE}&\textbf{Equilibrated PE/molecule}\\
-\hhline{|===|}
-\ccg 265&\ccg \rule{0pt}{2.5ex}193000&\ccg 728.30\\
-250&\rule{0pt}{2.5ex}173000&692.00\\
-\ccg 500&\ccg \rule{0pt}{2.5ex}210000&\ccg 420.00\\
-\hhline{---}
+\textbf{Number Of Molecules}&\textbf{LJ PE at Eql}&\textbf{LJ PE/mol at Eql}&\textbf{Temp}&\textbf{Carbon Size}\\
+\hhline{|=====|}
+\ccg 265&\ccg \rule{0pt}{2.5ex}-92755&\ccg -350.02&\ccg 3.5&\ccg 3.1~\AA\\
+500&\rule{0pt}{2.5ex}-212478&-424.96&4.0&3.8~\AA\\
+\ccg 1000&\ccg \rule{0pt}{2.5ex}-396115&\ccg -396.12&\ccg4.0&\ccg3.8~\AA\\
+\hhline{-----}
 \end{tabular}\label{table:PE}
-\captionof{table}{The potential energy at equilibration for the current system (265 molecules) and the previous two Neat P3HT systems run by Evan (250 and 500 molecules).
+\captionof{table}{The potential energy at equilibration for the current system (265 molecules) and the previous two Neat P3HT systems run by Evan (500 and 1000 molecules).
 All energies are given in energy units, which are consistent between the three simulations.}
 \end{center}
-
-
-
 
 \bibliography{refs}
 \bibliographystyle{unsrt}
