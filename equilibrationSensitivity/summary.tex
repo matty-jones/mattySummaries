@@ -57,12 +57,6 @@ It also has the advantage of the plotting being completely automated, dramatical
 \subsection{Explanation}
 
 
-\textcolor{red}{The temperature profile for these morphologies looks super weird, I think I cranked the thermostat up too high (10.0 from 1.0) after I noticed the temperature oscillations last run.
-Effectively, the strong coupling prevented the atoms from moving sufficiently and strongly throttled the velocieis, tanking the temperature down to very low (0.05ish, when it should be around 0.5 using the correct temperature units for MorphCT).
-The morphologies still look fine, so I continue to report the results below, but in the meantime I am doing a sweep over multiple values of tau (0.5, 1.0, 5.0, 10.0), and I will add these results to this summary when I get them.
-}
-
-
 I took the pristine P3HT results that we had previously (using the Voronoi cells for neighbour calculations) and compared them to systems that were equilibrated for a long time during the final MD phase of the molecular dynamics process.
 The final MD phase of the `Unequilibrated' systems ran for 1E5 timesteps, whereas the `equilibrated' systems were run for 1E7 timesteps instead.
 Figure \ref{fig:Energy} shows the potential energy evolution for the T = 1.5 system.
@@ -97,11 +91,33 @@ Additionally, there is now a more obvious decrement in mobility as a function of
 The absolute values however are largely the same as previously, with less than an order of magnitude difference between them.
 
 
+\subsection{Dependence of Equilibration on Tau}
+
+
+\begin{figure}[h!]\centering
+	\includegraphics[width=\textwidth]{Figures/Variation_in_Tau.png}
+    \caption{The mobilities for systems that have been equilibrated with varying values of thermostat coupling, $\tau$:
+    1) $\tau = 0.5$,
+    2) $\tau = 1.0$,
+    3) $\tau = 5.0$,
+    4) $\tau = 10.0$}
+	\label{fig:Tau}
+\end{figure}
+
+
+As can be seen, there is no substantial difference between the absolute values of mobility, nor the order-disorder trend as a function of $\tau$.
+There is a slight `washing out' of the trend that describes the difference between the ordered and disordered systems - the mobility at $T = 1.5$ is about a factor of 10x greater than $T = 1.75$, at $\tau = 0.5$, which increases to a factor of 14x at $\tau = 5.0$.
+
+\textcolor{red}{For completeness, I am running the 5 jobs again, this time regenerating the atom velocities based on a normal distribution and the input temperature between each molecular dynamics phase.
+These results will be added to this summary when the jobs finish.}
+
+\clearpage
+
 \subsection{Original (Unequilibrated) Results}
 
 
 \begin{figure}[h]\centering
-	\includegraphics[width=\textwidth]{Figures/origFG-p1-L15-f0.0-P0.1-T1.5-e0.5.png}
+	\includegraphics[width=0.8\textwidth]{Figures/origFG-p1-L15-f0.0-P0.1-T1.5-e0.5.png}
     \caption{   1) Chromophore connectivity network, 
                 2) Location of `stacks', 
                 3) Distribution of connected chromophore separations (defines stacks),
@@ -195,7 +211,7 @@ The absolute values however are largely the same as previously, with less than a
 \subsection{New (Equilibrated) Results}
 
 \begin{figure}[h]\centering
-	\includegraphics[width=\textwidth]{Figures/newFGP3HT_T1.5_equil.png}
+	\includegraphics[width=0.80\textwidth]{Figures/newFGP3HT_T1.5_equil.png}
     \caption{   1) Chromophore connectivity network, 
                 2) Location of `stacks', 
                 3) Distribution of connected chromophore separations (defines stacks),
