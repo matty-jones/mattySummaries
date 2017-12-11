@@ -8,7 +8,7 @@
 \usepackage[footnotesize,bf]{caption}
 
 % TABLE
-\usepackage{multicol,hhline,colortbl,multirow}
+\usepackage{multicol,hhline,colortbl,multirow,adjustbox}
 \usepackage{braket}
 \usepackage{siunitx}
 \usepackage{hyperref}
@@ -53,6 +53,9 @@ Either way, we were comparing apples to oranges and at the very least we needed 
 
 As an `extension task', we added charges in too, to improve model accuracy.
 The PE charges were taken from Mitch's previous work, and the PT charges were calculated from quantum-chemical methods using NWChem.
+Stacks are assigned automatically using a dynamic distance cut-off between the first maximum and first minimum of the chromophore separation histogram.
+Periodic boundaries are considered when assigning chromophores to each stack.
+
 
 \textcolor{red}{How confident are we in the PE charges?}
 
@@ -61,22 +64,24 @@ The PE charges were taken from Mitch's previous work, and the PT charges were ca
 
 
 \begin{center}
-\begin{tabular}{| c | c | c | c | c | c |}
+\begin{adjustbox}{max width = \textwidth}
+\begin{tabular}{| c | c | c | c | c | c | c |}
 \hline
 \rule{0pt}{2.5ex} 
-\multirow{2}{*}{\textbf{ID}}&\multirow{2}{*}{\textbf{Simulation Name}}&\textbf{Density}&\textbf{Anisotropy}&\textbf{Stacks}&\textbf{Mobility}\\
-                            &&(\SI{}{\gcm})&(Arb. U.)&(Arb. U.)&(\SI{}{\mobunits})\\
-\hhline{|======|}
-\textbf{\ccg1}&\rule{0pt}{2.5ex}\ccg PE\_MultiStack\_Eclipsed&\ccg 1.06&\ccg 0.0594&\ccg 1&\ccg8.81$\times 10^{0}$\\
-\textbf{2}&\rule{0pt}{2.5ex}PE\_SingleStack\_Eclipsed&1.06&0.0893&3&$8.84\times 10^{0}$\\
-\textbf{\ccg3}&\rule{0pt}{2.5ex}\ccg PE\_SingleStack\_Ordered&\ccg 1.06&\ccg 0.0471&\ccg195&\ccg8.95$\times 10^{0}$\\
-\hhline{|======|}
-\textbf{4}&\rule{0pt}{2.5ex}PT\_MultiStack\_Eclipsed&1.01&0.1704&20&1.92$\times 10^{0}$\\
-\textbf{\ccg5}&\rule{0pt}{2.5ex}\ccg PT\_MultiStack\_Ordered&\ccg 1.01&\ccg 0.0906&\ccg63&\ccg1.27$\times 10^{0}$\\
-\textbf{6}&\rule{0pt}{2.5ex}PT\_SingleStack\_Eclipsed&1.01&0.0979&4&5.19$\times 10^{0}$\\
-\textbf{\ccg7}&\rule{0pt}{2.5ex}\ccg PT\_SingleStack\_Ordered&\ccg 1.01&\ccg 0.0267&\ccg63&\ccg1.55$\times 10^{0}$\\
-\hhline{------}
+\multirow{2}{*}{\textbf{ID}}&\multirow{2}{*}{\textbf{Simulation Name}}&\textbf{Density}&\textbf{Anisotropy}&\textbf{Stacks}&\textbf{Stack Threshold}&\textbf{Mobility}\\
+                            &&(\SI{}{\gcm})&(Arb. U.)&(Arb. U.)&(\AA)&(\SI{}{\mobunits})\\
+\hhline{|=======|}
+\textbf{\ccg1}&\rule{0pt}{2.5ex}\ccg PE\_MultiStack\_Eclipsed&\ccg 1.06&\ccg 0.0594&\ccg 1&\ccg8.35&\ccg8.81$\times 10^{0}$\\
+\textbf{2}&\rule{0pt}{2.5ex}PE\_SingleStack\_Eclipsed&1.06&0.0893&3&7.36&$8.84\times 10^{0}$\\
+\textbf{\ccg3}&\rule{0pt}{2.5ex}\ccg PE\_SingleStack\_Ordered&\ccg 1.06&\ccg 0.0471&\ccg195&\ccg4.51&\ccg8.95$\times 10^{0}$\\
+\hhline{|=======|}
+\textbf{4}&\rule{0pt}{2.5ex}PT\_MultiStack\_Eclipsed&1.01&0.1704&20&6.17&1.92$\times 10^{0}$\\
+\textbf{\ccg5}&\rule{0pt}{2.5ex}\ccg PT\_MultiStack\_Ordered&\ccg 1.01&\ccg 0.0906&\ccg63&\ccg4.96&\ccg1.27$\times 10^{0}$\\
+\textbf{6}&\rule{0pt}{2.5ex}PT\_SingleStack\_Eclipsed&1.01&0.0979&4&4.90&5.19$\times 10^{0}$\\
+\textbf{\ccg7}&\rule{0pt}{2.5ex}\ccg PT\_SingleStack\_Ordered&\ccg 1.01&\ccg 0.0267&\ccg63&\ccg5.07&\ccg1.55$\times 10^{0}$\\
+\hhline{-------}
 \end{tabular}\label{table:mob}
+\end{adjustbox}
 \captionof{table}{The results from MorphCT for the various PAH morphologies. See the below section for a discussion of the stacks.}
 \end{center}
 
@@ -210,29 +215,6 @@ The PE charges were taken from Mitch's previous work, and the PT charges were ca
                 12) Logarithmic MSD plot.}
 	\label{fig:PTSingOrd}
 \end{figure}
-
-
-\subsection{Conclusions}
-
-
-\begin{itemize}
-    \item{Exploring the $\Delta E_{ij}$ has shown that some of the systems (namely PE\_MultiStack\_Eclipsed, PT\_SingleStack\_Eclipsed, and PE\_SingleStack\_Ordered) contain rigid bodies (delta function for the DoS), whereas others don't.
-        Having a $\Delta E_{ij} = 0$ will strongly affect (increase) the eventual hopping rate and so we are comparing apples to oranges.}
-    \item{Additionally, while the PT\_SingleStack systems are truly one single stack, the PE\_SingleStack systems are not.
-        They certainly have fewer stacks, but they are not on massive periodic structure like in the PT\_SingleStack case, and so a direct comparison can not really be drawn there either.}
-    \item{The carrier termination (anisotropy) graphs in panel \textbf{5)} show that carriers have not moved very far out of the simulation volume in the PT\_MultiStack, and PE\_SingleStack\_Eclipsed cases.
-        All of the MSD fits are excellent, however, so this might not be an issue.}
-    \item{All of the flexible PT\_MultiStack and PE\_SingleStack systems shown Gaussian DoSes with the maximum breadth permitted by the Gaussian map that we perform in MorphCT (which will shrink a distribution with $\sigma > 100 meV$ down to $\sigma = 100 meV$, but leave distributions with $\sigma \leq 100 meV$ alone).
-        The breadth of the Ordered system is significantly greater than the Eclipsed system, in both cases.
-    This makes sense - in the Eclipsed case, the molecules are azimuthally in-register and so are squeezed into planarity by the molecules closely packed around it.
-This makes each molecule structurally indistinct, which manifests as an energetic indistinction and the $\Delta E_{ij} \rightarrow 0$.}
-\end{itemize}
-
-
-I think there are too many variables here that we are unable to resolve with just these 7 simulations.
-This makes it impossible to draw any conclusions about the presence and orientation of the stacks other than \textcolor{blue}{``it matters and can affect the mobilities by an order of magnitude''}.
-Given the strict mathematical constraints on how the stacks can form and still produce a coherent structure without morphological defects, I am not convinced that this is something we can adjust our mobilities for either.
-Instead, I think it's something that we just have to be aware of when submitting our simulations to KMC, consider when drawing conclusions, and disclose fully when we present results.
 
 
 %\section{New Jobs, 08/17}
