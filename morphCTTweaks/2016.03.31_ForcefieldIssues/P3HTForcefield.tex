@@ -1,0 +1,95 @@
+\documentclass[12pt]{article}
+%--------------------   start of the 'preamble'
+%
+\usepackage{graphicx,amssymb,amstext,amsmath,color}
+\usepackage[margin=2cm]{geometry}
+\usepackage{abstract}
+\usepackage{setspace}
+\usepackage[footnotesize,bf]{caption}
+
+% TABLE
+\usepackage{multicol,hhline,colortbl}
+\usepackage{braket}
+\usepackage{siunitx}
+\usepackage{hyperref}
+\usepackage{authblk}
+\definecolor{Gray}{gray}{0.8}
+%%\usepackage[sort&compress]{natbib}
+%%\bibpunct{(}{)}{,}{a}{, }{;}
+%
+\usepackage[sort&compress]{natbib}
+\bibpunct{[}{]}{,}{s}{}{;}
+
+
+
+\renewcommand{\labelitemii}{$\circ$}
+\renewcommand{\bibname}{References}
+
+
+\title{P3HT Forcefield Funtimes}
+\author{Matthew Jones}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Structure of code}
+
+\begin{itemize}
+\item{As we discussed on Tuesday, I added improper dihedrals to try and enforce ring planarity, but found that these impropers had no effect on the system. I then began to wonder why the people who wrote the paper (Bhatta et al, see below) that contains the forcefield I am trying to use did not have to define impropers to make their rings planar. After examining their angle and dihedral definitions, I noticed that they define enough dihedrals to keep the ring planar automatically, without the need for impropers. Therefore, I set about replicating their forcefield as closely as possible.}
+\item{I have split a branch off MorphCT called `dihedrals', this is the one I have been playing with. The Master branch is still functional and produces the molecule files based on the first attempt at the forcefield, where the thiophene rings are slightly non-planar.}
+\item{The forcefield coefficients are defined in \verb|code/runHoomd.py|, in the \verb|setForcefieldCoeffs()| function. In my code, the information describing the location of each bond, angle and dihedral for each monomer in the system is read from my model file \verb|templates/mid3HT.xml|.}
+\item{The values I have been using for the forcefield are taken from ``Improved Force Field for Molecular Modeling of Poly(3-Hexylthiophene)'' by Bhatta et al. \url{http://dx.doi.org/10.1021/jp404629a}. The values in here have been developed from previous studies and are similar to those in the OPLS-AA forcefield.}
+\item{One key difference between the master branch and dihedrals is that, in dihedrals, I have defined fewer dihedrals to describe the P3HT monomer, located in \verb|templates/mid3HT.xml|. In the master branch many more dihedrals are defined in that template file, which were added automatically from the CML to XML conversion in \verb|modeler_hoomd|. These extra dihedrals are not characterised in the Bhatta paper, and so I just estimated their values based on the coefficients that they did define. In the dihedrals branch, I removed these spurious definitions and instead tried to emulate the most vanilla version of the Bhatta forcefield that I could. I assume it is possible to describe the P3HT forcefield sufficiently using just the definitions in their paper.}
+\end{itemize}
+
+\section{Forcefield Coefficients}
+
+\begin{itemize}
+\item{Note that sScale and eScale correspond to my scale factors, provided to HOOMD to normalise distances and energies by the size of the sulfur atom (3.55 angstroms) and S-S LJ pair interaction (0.25 kcal mol$^{-1}$) respectively. If I have implemented them correctly, the values of these scaling factors should not break my forcefield, however even when I set the scaling factors to one, I still get screwy behaviour.}
+\end{itemize}
+
+
+\subsection{Dihedrals}
+\begin{itemize}
+\item{I started by examining the dihedrals, and noticed that I had a line in my tabulated dihedral function: \verb|theta = np.deg2rad(theta)|. This is erroneous, as HOOMD inputs the values of theta to my function in radians, so double converting made the angles a factor of $\pi / 180$ smaller than they should have been. Making this change (which I'm confident is the correct thing to do) dramatically broke my model and the thiophene rings lost all structural rigidity. After playing with the dihedrals for a while, I decided that they were ok and it was something else that was a fault.}
+\item{The coefficients defined for my dihedrals are all input as kcal mol$^{-1}$, exactly as they are described in the supporting information of the Bhatta paper.}
+\end{itemize}
+
+
+Code run output: Very wobbly thiophene rings, polymer explosions in nvt simualations at timesteps of 1E-4.
+
+
+\subsection{Angles}
+\begin{itemize}
+\item{I then noticed that the $k$ values for the angles in my forcefield were very small. This is because I chumped converting from degrees to radians and went the wrong way. Degrees are far smaller than radians, which means that all of my $k$ values are now typically of the order 100,000 kcal mol$^{-1}$ rad$^{-2}$. A factor of two arises from the fact that HOOMD halves its prefactor values, whereas Bhatta does not.}
+\item{These $k$ coefficients are extremely large. Comparing to the perylothiophene and Mike's UA \verb|model.xml| located in opv-cg, angle coefficients provided are of the order 100 [ENERGY UNITS], for similar angle values (quite clearly given in radians).}
+\item{The $k$ values for my angles are input to HOOMD as kcal mol$^{-1}$ rad$^{-2}$, and the equilibrium angle is provided in radians.}
+\end{itemize}
+
+
+Code run output: Phase 1 (the nve, brownian-limited phase for 1000 timesteps) immediately looks better. The general motion of the atoms is to move away from eachother as before, but it seemed less random and the structure of the P3HT looked more clear. However, polymer explosions occured in the nvt simulations at timesteps of 1E-4. In a slowed-down phase 2 (with timestep $=$ 5E-5), the explosions stopped but the bonds looked to be getting far too long, and not harmonically oscillating back to the equilibrium length very quickly, if at all.
+
+
+\subsection{Bonds}
+\begin{itemize}
+\item{The bond coefficients confuse me the most. In the name of consistency, my values are input in units of kcal mol$^{-1}$ \AA ${^-2}$, and the equilibrium legnths are given in \AA. Because I'm dealing with both an energy and a distance, I scale the by eScale/(sScale$^{2}$) (remember that my eScale is 1/0.25 and sScale is 1/3.55), but changing these scaling factors to one did not rectify the issue.}
+\item{My bond coefficients are extremely small compared to the perylothiophene and Mike's UA \verb|model.xml|. Whereas I am reporting $k$ of order 100 kcal mol$^{-1}$ \AA$^{-2}$, the opv-cg models use $k$ of the order 10,000 [ENERGY UNITS], with distances that look to be normalised by $\sim$ 3 \AA. Is this something I should be concerned about/am I missing a scaling factor that I need somewhere? The OPLS-AA forcefield \verb|.txt| doesn't display the units but their values are of the order 100 too.} 
+\end{itemize}
+
+
+Code run output: No changes actually made, but when I convert sScale $=$ eScale $= 1.0$, the polymer stops exploding until phase 4 when I increase the timestep to 1E-3. Thiophene rings are looking as non-planar as they did in the master branch, if not a bit worse, but the bonds are definitely too long in many places.
+
+
+\section{Hypotheses}
+ 
+\begin{itemize}
+\item{HOOMD definitely outputs thetas in radians and it is wrong to convert them in the dihedral function so it is down to pure cancellation of errors that the master branch has output reasonably good data up until this point.}
+\item{It SHOULD be possible get good P3HT chain behaviour (including ring planarity) only using the dihedrals that are listed in the SI of Bhatta et al, and we should not have to define all of the ones output from the \verb|cml| to \verb|xml| conversion (that are listed in the master branch), or additional impropers.}
+\item{My angle force coefficients are too small in the master branch because I did the degree to radian conversion in reverse. However, the resultant values in the dihedral branch seem too large as the angle constraints now appear to completely dominate over everything, effectively ignoring the dihedrals and bonds, leading to non-planar thiophene rings.}
+\item{My bond force coefficients are too small in both branches, which explains why some of the bonds are far longer than they should be and do not appear to be reducing in length.}
+\item{I should perhaps grind through the trigonometric algebra and convert my dihedral table function into HOOMD's OPLS format to avoid any issues with how it interprets the dihedrals.}
+\end{itemize}
+
+
+\end{document}
