@@ -56,11 +56,19 @@ The system was UA to begin with, and so no fine-graining was required for this m
 \multirow{2}{*}{\textbf{ID}}&\multirow{2}{*}{\textbf{Simulation Name}}&\textbf{Density}&\textbf{Anisotropy}&\textbf{Anisotropy}&\textbf{Stacks}&\textbf{Mobility}\\
                             &&(\SI{}{\gcm})&(Arb. U.)&(Shape)&(Arb. U.)&(\SI{}{\mobunits})\\
 \hhline{|=======|}
-\textbf{\ccg1}&\rule{0pt}{2.5ex}\ccg 1k\_P3HT&\ccg 1.11&\ccg 0.1086&\ccg Flat Disk&\ccg26&\ccg3.00$\times 10^{0}$\\
+\textbf{\ccg1}&\rule{0pt}{2.5ex}\ccg 1k\_P3HT&\ccg 1.11&\ccg 0.1086&\ccg Flat Disk&\ccg477&\ccg3.00$\times 10^{0}$\\
 \hhline{-------}
 \end{tabular}\label{table:mob}
 \captionof{table}{The results from MorphCT.}
 \end{center}
+
+
+Note that chromophores are added to a `stack' if their CoMs are separated by less than a defined cut-off.
+As the normal $\pi$-stacking distance for P3HT is around 3.9~\AA, the stack cut-off was set at 4~\AA.
+Nearly all of the morphology is a single stack, with some of the grains aligned in other directions forming seperate stacks, and many chromophores constituting their own stack.
+This results in a large number of stacks in the system overall (477).
+Stack calculations also consider the periodic boundaries.
+
 
 \clearpage
 
