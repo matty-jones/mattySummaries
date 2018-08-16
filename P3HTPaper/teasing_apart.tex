@@ -1,0 +1,113 @@
+\documentclass[12pt]{article}
+%--------------------   start of the 'preamble'
+%
+\usepackage{graphicx,amssymb,amstext,amsmath,color}
+\usepackage[margin=2cm]{geometry}
+\usepackage{abstract}
+\usepackage{setspace}
+\usepackage[footnotesize,bf]{caption}
+
+% TABLE
+\usepackage{multicol,hhline,colortbl,multirow}
+\usepackage{braket}
+\usepackage{siunitx}
+\usepackage{hyperref}
+\usepackage{authblk}
+\usepackage{siunitx}
+\usepackage{xcolor}
+\usepackage{mathrsfs}
+\usepackage[sort&compress]{natbib}
+\bibpunct{[}{]}{,}{s}{}{;}
+
+
+\definecolor{gray}{gray}{0.8}
+\def\mobunits{\square\centi\meter\per\volt\per\second}
+\def\gcm{\gram\per\cubic\centi\meter}
+\def\ccg{\cellcolor{gray}}
+
+\renewcommand{\labelitemii}{$\circ$}
+\renewcommand{\bibname}{References}
+
+
+\title{P3HT Paper Proposals}
+\author{Evan Miller and Matthew Jones}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+Colors:
+\begin{itemize}
+    \item{\textcolor{blue}{Blue: Good for Modeling}}
+    \item{\textcolor{red}{Red: Good for CT}}
+    \item{\textcolor{purple}{Purple: Good for both}}
+    \item{\textcolor{green}{Green: Fixes/Additions required}}
+\end{itemize}
+
+
+\section{Monolithic Paper Story}
+
+\begin{itemize}
+    \item{Introduction
+        \begin{itemize}
+            \item{\textcolor{purple}{Global climate change}}
+            \item{\textcolor{blue}{Structural performance descriptors for organic semiconductors}}
+            \item{\textcolor{blue}{Device characterisations}}
+            \item{\textcolor{red}{Computational methods (mostly morph gen)}}
+            \item{\textcolor{red}{P3HT simulations}}
+            \item{\textcolor{red}{Optimizations of P3HT simulation techniques}}
+            \item{\textcolor{blue}{Charge transport methods}}
+            \item{\textcolor{purple}{Summary of what is coming}}
+        \end{itemize}}
+    \item{Methods
+        \begin{itemize}
+            \item{\textcolor{blue}{MD: Software and hardware}}
+            \item{\textcolor{blue}{MD: UA}}
+            \item{\textcolor{blue}{MD: FF}}
+            \item{\textcolor{blue}{MD: Initialization}}
+            \item{\textcolor{blue}{MD: Statepoints}}
+            \item{\textcolor{blue}{MD: Simulation protocol}}
+            \item{\textcolor{blue}{Char: GIXS}}
+            \item{\textcolor{purple}{Char: \textcolor{blue}{Psi}/\textcolor{red}{Psi Prime} - I think these need to be split. \textcolor{blue}{For the modeling paper, our main results can be:} \textcolor{green}{the need for efficient phase sweeps at lots of statepoints, statepoints that give good $\Psi$, how structure changes as we vary our model, performance}}}
+            \item{\textcolor{red}{KMC: MorphCT} - Don't need to discuss MorphCT's fine\_graining module because we never use it, but scope for more detail on add\_hydrogens in a more general sense.}
+            \item{\textcolor{red}{KMC: Components and how it works}}
+            \item{\textcolor{red}{KMC: \textcolor{green}{TODO} Comparison between DFT and ZINDO}}
+        \end{itemize}}
+    \item{Results
+        \begin{itemize}
+            \item{\textcolor{purple}{Sighting paragraph}}
+            \item{\textcolor{blue}{Model: Grains and RDF}}
+            \item{\textcolor{blue}{Model: GIXS}}
+            \item{\textcolor{blue}{Model: Charges (subsection)} - \textcolor{green}{Focus should be: Bhatta (and others) get good agreement using charges. We get good agreement without charges, but we have to shrink our atom sizes down in order to do so. Therefore we should drop the ``shrink $+$ charges is bad'', and instead focus on the advantages of not considering charges. Maybe drop figure 6 here?}}
+            \item{\textcolor{blue}{Model: Chain length (subsection)} - Scope for including PDI here but I think that's more for the \textcolor{red}{CT paper}.}
+            \item{\textcolor{blue}{Model: Shrinking vs Constant (subsection)} - \textcolor{green}{Emphasize the difference between shrinking from disordered and shrinking from ordered}.}
+            \item{\textcolor{blue}{Model: Conclusion (subsection)} - \textcolor{green}{Reframe the charge stuff here}.}
+            \item{\textcolor{blue}{100 Oligomers Subsection} - First main results section, up to figure 10 (include 10a as it's a modelling difference).}
+            \item{\textcolor{red}{100 Oligomers Subsection} - First main results section, beyond figure 10a - how is mobility linked to structure, how do we address the issues with that (Psi Prime and alt-clustering).}
+            \item{\textcolor{red}{1000 Oligomers subsection} - In the \textcolor{blue}{Modelling paper}, we need to do some structure analysis stuff with the 1000s (already there kinda, but could use some figures). For the \textcolor{red}{CT paper}, the clustering algorithm stuff works quite well with the Psi Prime discussion, where we show that structural stuff is not sufficient.}
+            \item{\textcolor{blue}{Performance} - Second main results section}
+        \end{itemize}}
+    \item{\textcolor{purple}{Conclusions}}
+    \item{SI Sections
+        \begin{itemize}
+            \item{\textcolor{blue}{Bonded Interactions}}
+            \item{\textcolor{blue}{Charges}}
+            \item{\textcolor{red}{Model Change effects on $\mu_{0}$} - mostly dropped, but the 50 vs 15 is moved to main text}
+            \item{\textcolor{blue}{15 vs 50 relaxation times}}
+            \item{\textcolor{blue}{System evolution to energy}}
+            \item{\textcolor{red}{Clustering algorithms used} - move to main text of CT paper and tie in with Psi Prime}
+            \item{\textcolor{red}{Comparison between ZINDO and DFT} - move to main text of CT paper}
+        \end{itemize}}
+\end{itemize}
+
+\textcolor{green}{Additional things to include}:
+
+\begin{itemize}
+    \item{\textcolor{red}{Polydispersity (tie chains)}}
+    \item{\textcolor{red}{MorphCT manual}}
+    \item{\textcolor{red}{DBP results}}
+\end{itemize}
+
+
+
+\end{document}
